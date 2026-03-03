@@ -8,7 +8,7 @@
 ![GitHub license](https://img.shields.io/github/license/Q7DF1/XrayFA)
 ![GitHub top language](https://img.shields.io/github/languages/top/Q7DF1/XrayFA)
 
-##  📸  Screenshots
+##  📸 Screenshots
 
 <p aligin="center">
     <img src="docs/config_xrayFA.jpg" width="30%" />
