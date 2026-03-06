@@ -1,12 +1,18 @@
 package com.android.xrayfa.ui.component
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,9 +21,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
+import com.android.xrayfa.R
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.sp
 
 @Preview
 @Composable
@@ -39,6 +49,7 @@ fun HomeScreenV2() {
                     .size(400.dp)
                     .align(Alignment.TopCenter)
             )
+            HomeContent()
         }
     }
 }
@@ -52,6 +63,7 @@ fun HomeHeaderBackground(modifier: Modifier = Modifier) {
         val brushEnd1 = size.height * 0.9f
         val brushStart2 = size.width *0.5f
         val brushEnd2 = size.height * 1.75f
+        //These colors need to be added to theme folder/ appropriate folder
         val colorStops = arrayOf(
             0.0f to Color(0xFF4695EF),
             0.20f to Color(0xFF43A9FF),
@@ -79,7 +91,7 @@ fun HomeHeaderBackground(modifier: Modifier = Modifier) {
             )
         )
         drawOval(
-            //These colors need to be added to theme folder/ appropriate folder
+
             brush = Brush.linearGradient(
                 colorStops = colorStops2,
                 start = Offset(brushStart2, size.width*0.25f),//(200,100)
@@ -95,3 +107,97 @@ fun HomeHeaderBackground(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun HomeContent(modifier: Modifier = Modifier) {
+    Box (
+        modifier = modifier.fillMaxSize()
+    ){
+        TopBar(modifier = modifier.align(Alignment.TopCenter))
+
+        PowerSection(modifier = modifier.align(Alignment.Center)
+            .align(Alignment.Center)
+            .padding(bottom = 400.dp))
+    }
+}
+
+@Composable
+fun TopBar(modifier: Modifier = Modifier){
+    Box( modifier = modifier.fillMaxWidth()
+        .height(100.dp)
+    ){
+        Text("Hello World", fontSize = 35.sp , color = Color.Blue, modifier = Modifier.align(Alignment.Center).padding(20.dp))
+        //Side menu bar (on click nothing for now)
+        IconButton(onClick = {},
+            modifier = Modifier.align(Alignment.CenterStart)
+            .size(80.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.menu_bar),
+                contentDescription = "Menu",
+                tint = Color.White,
+                modifier = Modifier.size(60.dp)
+
+            )
+        }
+    }
+}
+/*
+@Composable
+fun PowerSection(modifier: Modifier = Modifier){
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ){
+    Canvas(modifier = Modifier.fillMaxSize()
+        .padding(bottom = 400.dp)){
+        drawCircle(
+            color = Color.White,
+            radius = 300f
+        )
+        drawCircle(
+            color = Color(0xFFBECBD2).copy(alpha = 0.8f),
+            radius = 300f,
+            style = Stroke(width = 20f)
+        )
+    }
+        Icon(
+            painter = painterResource(R.drawable.on_button),
+            contentDescription = "On Button",
+            tint = Color.Unspecified,
+            /*
+            modifier = Modifier.size(300.dp)
+            .padding(bottom = 100.dp)
+
+             */
+        )
+    }
+}
+
+ */
+@Composable
+fun PowerSection(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.size(200.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            drawCircle(
+                color = Color.White,
+                radius = size.minDimension / 2
+            )
+
+            drawCircle(
+                color = Color(0xFFBECBD2).copy(alpha = 0.8f),
+                radius = size.minDimension / 2,
+                style = Stroke(width = 20f)
+            )
+        }
+        Icon(
+            painter = painterResource(R.drawable.on_button),
+            contentDescription = "Power",
+            tint = Color.Unspecified,
+            modifier = Modifier.size(160.dp)
+                .align(Alignment.Center)
+        )
+    }
+}
