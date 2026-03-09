@@ -8,12 +8,17 @@
 ![GitHub license](https://img.shields.io/github/license/Q7DF1/XrayFA)
 ![GitHub top language](https://img.shields.io/github/languages/top/Q7DF1/XrayFA)
 
-##  📸 Screenshots
-
+##  📸  Screenshots
+- Phone machine
 <p aligin="center">
     <img src="docs/config_xrayFA.jpg" width="30%" />
     <img src="docs/home_xrayFA.jpg" width="30%" />
     <img src="docs/settings_xrayFA.jpg" width="30%" />
+</p>
+
+- Tablet machine
+<p aligin="center">
+    <img src="docs/tablet_scene_xrayFA.png" width="90%" />
 </p>
 
 
@@ -34,6 +39,7 @@ You can download the latest APK from the **[Releases Page](https://github.com/Q7
 ## 🛠️ Build from Source
 
 To build XrayFA from source, you need Android Studio and a basic understanding of Android development.
+
 
 ### Prerequisites
 * Android Studio (latest stable version recommended)
@@ -66,7 +72,8 @@ To build XrayFA from source, you need Android Studio and a basic understanding o
 4.  **Build and Run**
     * Connect your Android device or start an emulator.
     * Click the green **Run** button (Shift + F10).
-
+> [!CAUTION]
+> 🚨 **IMPORTANCE：Ensure the build configuration is set to RELEASE。** [more informations](https://medium.com/androiddevelopers/why-should-you-always-test-compose-performance-in-release-4168dd0f2c71)
 ## 📖 Usage
 
 1.  **Import Config**:

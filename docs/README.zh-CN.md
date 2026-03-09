@@ -12,11 +12,17 @@
 
 ## 📸  界面预览
 
+- 手机设备
 <p aligin="center">
     <img src="config_xrayFA.jpg" width="30%" />
     <img src="home_xrayFA.jpg" width="30%" />
     <img src="settings_xrayFA.jpg" width="30%" />
 </p>
+- 平板设备
+<p aligin="center">
+    <img src="tablet_scene_xrayFA.png" width="90%" />
+</p>
+
 
 ## ✨ 功能特性
 
@@ -69,7 +75,8 @@
 4.  **构建与运行**
     * 连接您的 Android 设备或启动模拟器。
     * 点击绿色的 **Run** 按钮 (Shift + F10)。
-
+> [!CAUTION]
+> 🚨 **重要提示：请务必确保构建配置设为 RELEASE 模式。** [查看技术原因](https://medium.com/androiddevelopers/why-should-you-always-test-compose-performance-in-release-4168dd0f2c71)
 ## 📖 使用指南
 
 1.  **导入配置**：
