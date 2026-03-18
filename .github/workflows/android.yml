@@ -55,7 +55,7 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      run:
+      run: |
         sudo mkdir -p /build/build/com.android.xrayfa
         sudo chown -R $USER:$USER /build
         
