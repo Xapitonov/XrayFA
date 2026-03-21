@@ -81,6 +81,7 @@ import com.android.xrayfa.helper.NotificationHelper
 import com.android.xrayfa.ui.navigation.Apps
 import com.android.xrayfa.ui.navigation.Logcat
 import com.android.xrayfa.ui.navigation.NavigateDestination
+import com.android.xrayfa.ui.navigation.Settings
 import com.android.xrayfa.viewmodel.GEOFileType
 import com.android.xrayfa.viewmodel.GEOFileType.Companion.FILE_TYPE_IP
 
@@ -146,12 +147,21 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {Text(stringResource(R.string.settings_title))},
+                title = {
+                    Text(stringResource(R.string.settings_title))
+                },
                 navigationIcon = {
-                    Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "settings"
-                    )
+                    with(sharedTransitionScope) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "settings",
+                            modifier = Modifier.sharedElement(
+                                sharedTransitionScope.rememberSharedContentState(key = Settings.route),
+                                animatedVisibilityScope = LocalNavAnimatedContentScope.current,
+                                )
+                        )
+                    }
+
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = currentTopbarColor,
