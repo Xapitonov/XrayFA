@@ -4,8 +4,13 @@ import android.app.Activity
 import android.net.VpnService
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +46,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +56,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -59,6 +66,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.android.xrayfa.R
@@ -334,7 +342,25 @@ fun V2rayStarterLarge(
             xrayViewmodel.startV2rayService(context)
         }
     }
+    val scale = remember { Animatable(1.0f) }
 
+    // Re-launch the effect whenever the 'running' variable changes
+    LaunchedEffect(isRunning) {
+        // Step 1: Animate the scale up to 1.1f quickly
+        scale.animateTo(
+            targetValue = 1.2f,
+            animationSpec = tween(durationMillis = 150)
+        )
+
+        // Step 2: Bounce back to 1.0f with a spring effect
+        scale.animateTo(
+            targetValue = 1.0f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    }
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -360,6 +386,7 @@ fun V2rayStarterLarge(
                 }
             },
             modifier = Modifier.fillMaxSize()
+                .scale(scale.value)
         ) {
             Icon(
                 imageVector = if (isRunning) Icons.Default.Done else ImageVector.vectorResource(R.drawable.ic_power),
