@@ -348,6 +348,14 @@ fun SettingsScreen(
                         downloading = geoLiteDownloading,
                         enable = settingsState.geoLiteInstall
                     )
+                    SettingsCheckBox(
+                        title = R.string.enable_hextun_title,
+                        description = R.string.enable_hex_tun_desc,
+                        checked = settingsState.hexTunEnable,
+                        onCheckedChange = {
+                            viewmodel.setHexTunEnable(it)
+                        }
+                    )
                     SettingsFieldBox(
                         title = R.string.test_url,
                         content = settingsState.delayTestUrl
@@ -370,7 +378,6 @@ fun SettingsScreen(
                         content = versionName,
                         downloading = xrayFaDownloading,
                         onDownloadClick = {
-
                         }
                     )
 

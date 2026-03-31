@@ -153,6 +153,12 @@ class SettingsViewmodel(
         }
     }
 
+    fun setHexTunEnable(enable: Boolean) {
+        viewModelScope.launch {
+            repository.setHexTunState(enable)
+        }
+    }
+
     @Deprecated("not used")
     fun startAppsActivity(context: Context) {
         val intent = Intent(context, AppsActivity::class.java)

@@ -16,11 +16,11 @@ import com.android.xrayfa.model.RuleObject
 import com.android.xrayfa.model.SniffingObject
 import com.android.xrayfa.model.SocksInboundConfigurationObject
 import com.android.xrayfa.model.SystemPolicyObject
+import com.android.xrayfa.model.TunInboundConfigurationObject
 import com.android.xrayfa.model.TunnelInboundConfigurationObject
 import com.android.xrayfa.model.XrayConfiguration
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
 
 /**
  *
@@ -53,6 +53,24 @@ abstract class AbstractConfigParser<T: AbsOutboundConfigurationObject> {
                 enabled = true
             ),
             tag = "socks"
+        )
+    }
+
+    suspend fun getTunInboundConfig(): InboundObject {
+        return InboundObject(
+            port = 0,
+            protocol = "tun",
+            settings = TunInboundConfigurationObject(
+                name ="xray0",
+                MTU =1500,
+                userLevel = 8
+            ),
+            sniffing = SniffingObject(
+                destOverride = listOf("http","tls"),
+                enabled = true,
+                routeOnly = false
+            ),
+            tag = "tun"
         )
     }
 
@@ -136,6 +154,11 @@ abstract class AbstractConfigParser<T: AbsOutboundConfigurationObject> {
                         inboundTag = listOf("api"),
                         outboundTag = "api",
                         type = "field"
+                    ),
+                    RuleObject(
+                        inboundTag = arrayListOf("tun"),
+                        outboundTag = "dns-out",
+                        port = "53"
                     )
                 )
         )
@@ -170,7 +193,11 @@ abstract class AbstractConfigParser<T: AbsOutboundConfigurationObject> {
             dns = getBaseDnsConfig(),
             log = getBaseLogObject(),
             policy = getBasePolicyObject(),
-            inbounds = listOf(getBaseInboundConfig(),getAPIInboundConfig()),
+            inbounds = listOf(
+                getBaseInboundConfig(),
+                getAPIInboundConfig(),
+                getTunInboundConfig()
+            ),
             outbounds = listOf(
                 getBaseOutboundConfig(),
                 parseOutbound(link)

@@ -10,4 +10,6 @@ interface Tun2SocksService {
 
     suspend fun stopTun2Socks()
 
+    fun isRunning(): Boolean
+
 }

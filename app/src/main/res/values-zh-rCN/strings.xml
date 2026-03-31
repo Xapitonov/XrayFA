@@ -82,4 +82,6 @@
     <string name="scan_qr_permission_desc">请授予相机权限以使用扫码功能</string>
     <string name="decode_qr_failed">解析二维码失败</string>
     <string name="connection_detail">连接详情</string>
+    <string name="enable_hextun_title">开启hex tun</string>
+    <string name="enable_hex_tun_desc">开启三方工具hex tun</string>
 </resources>
