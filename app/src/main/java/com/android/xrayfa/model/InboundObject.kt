@@ -59,6 +59,11 @@ data class TunnelInboundConfigurationObject( //dokodemo-door
     val userLevel: Int? = null,
 ): AbsInboundConfigurationObject()
 
+data class TunInboundConfigurationObject(
+    val name: String?,
+    val MTU: Int?,
+    val userLevel: Int?
+): AbsInboundConfigurationObject()
 
 data class ClientObject(
     val id: String,

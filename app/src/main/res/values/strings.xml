@@ -92,4 +92,6 @@
     <string name="scan_qr_permission_desc">Please grant camera permissions to use the scanning feature.</string>
     <string name="decode_qr_failed">decode QR failed</string>
     <string name="connection_detail">Connection Details</string>
+    <string name="enable_hextun_title">enable hex tun</string>
+    <string name="enable_hex_tun_desc">enable hex tun as third part tool</string>
 </resources>

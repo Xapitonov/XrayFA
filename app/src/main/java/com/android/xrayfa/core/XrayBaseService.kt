@@ -113,15 +113,22 @@ class XrayBaseService
 //            )
 //        }else startForeground(NotificationHelper.NOTIFICATION_ID,notification)
         serviceScope.launch {
+            val settingState = settingsRepo.settingsFlow.first()
             notificationHelper.showNotification()
             xrayCoreManager.addConsumer { data->
                 notificationHelper.updateNotification(data)
             }
-            xrayCoreManager.startV2rayCore(link,protocol)
             startVpn()
-            tunFd?.let {
-                tun2SocksService.startTun2Socks(it.fd)
+            if (settingState.hexTunEnable) {
+                xrayCoreManager.startV2rayCore(link,protocol,0)
+                tunFd?.let {
+                    tun2SocksService.startTun2Socks(it.fd)
+                }
+            }else {
+                xrayCoreManager.startV2rayCore(link,protocol,tunFd?.fd)
             }
+
+
         }
 
         
@@ -129,7 +136,7 @@ class XrayBaseService
 
     private fun stopV2rayCoreService() {
         serviceScope.launch {
-            tun2SocksService.stopTun2Socks()
+            if (tun2SocksService.isRunning()) tun2SocksService.stopTun2Socks()
         }
         stopVPN()
         xrayCoreManager.stopV2rayCore()

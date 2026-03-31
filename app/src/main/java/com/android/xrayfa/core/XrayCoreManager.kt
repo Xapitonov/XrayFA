@@ -113,10 +113,13 @@ class XrayCoreManager
         return delay
     }
 
-    suspend fun startV2rayCore(link: String,protocol: String) {
+    suspend fun startV2rayCore(link: String,protocol: String,tunFd: Int?) {
         startOrClose = true
         try {
-            coreController?.startLoop(parserFactory.getParser(protocol).parse(link),0)
+            tunFd?.let {
+                coreController?.startLoop(parserFactory.getParser(protocol).parse(link),tunFd)
+            }
+
         }catch (e: Exception) {
             Log.e(TAG, "startV2rayCore failed: ${e.message}")
         }

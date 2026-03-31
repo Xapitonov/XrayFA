@@ -30,7 +30,8 @@ data class SettingsState(
     val version: String = "1.0.0",
     val geoLiteInstall: Boolean = false,
     val liveUpdateNotification: Boolean = false,
-    val bootAutoStart: Boolean = false
+    val bootAutoStart: Boolean = false,
+    val hexTunEnable: Boolean = true
 )
 object SettingsKeys {
     val DARK_MODE = intPreferencesKey("dark_mode")
@@ -46,6 +47,8 @@ object SettingsKeys {
     val GEO_LITE_INSTALL = booleanPreferencesKey("geo_lite_install")
     val LIVE_UPDATE_NOTIFICATION = booleanPreferencesKey("live_update_notification")
     val BOOT_AUTO_START = booleanPreferencesKey("boot_auto_start")
+
+    val HEX_TUN_ENABLE = booleanPreferencesKey("hex_tun_open")
 }
 
 const val DEFAULT_DELAY_TEST_URL = "https://www.google.com"
@@ -83,7 +86,8 @@ class SettingsRepository
             xrayCoreVersion = prefs[SettingsKeys.XRAY_CORE_VERSION]?:"unknown",
             geoLiteInstall = prefs[SettingsKeys.GEO_LITE_INSTALL] == true,
             liveUpdateNotification = prefs[SettingsKeys.LIVE_UPDATE_NOTIFICATION] == true,
-            bootAutoStart = prefs[SettingsKeys.BOOT_AUTO_START] == true
+            bootAutoStart = prefs[SettingsKeys.BOOT_AUTO_START] == true,
+            hexTunEnable =  prefs[SettingsKeys.HEX_TUN_ENABLE]?:true
         )
 
     }
@@ -155,6 +159,12 @@ class SettingsRepository
     suspend fun setBootAutoStart(enable: Boolean) {
         context.dataStore.edit {
             it[SettingsKeys.BOOT_AUTO_START] = enable
+        }
+    }
+
+    suspend fun setHexTunState(enable: Boolean) {
+        context.dataStore.edit {
+            it[SettingsKeys.HEX_TUN_ENABLE] = enable
         }
     }
 

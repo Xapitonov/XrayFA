@@ -14,6 +14,7 @@ open class TProxyService @Inject constructor(
     private val util: Tun2SocksConfigUtil
 ) : Tun2SocksService {
 
+    var running: Boolean = false
     companion object {
         init {
             System.loadLibrary("hev-socks5-tunnel")
@@ -37,13 +38,22 @@ open class TProxyService @Inject constructor(
         val path = util.configure(context)
         try {
             TProxyStartService(path, fd)
+            running = true
         } catch (e: Exception) {
             Log.e("TProxyService", "startTun2Socks: ${e.message}")
         }
     }
 
     override suspend fun stopTun2Socks() {
-        TProxyStopService()
+        if (running) {
+            TProxyStopService()
+            running = false
+        }
+
+    }
+
+    override fun isRunning(): Boolean {
+        return running
     }
 
 
