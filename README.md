@@ -7,6 +7,21 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Q7DF1/XrayFA)
 ![GitHub license](https://img.shields.io/github/license/Q7DF1/XrayFA)
 ![GitHub top language](https://img.shields.io/github/languages/top/Q7DF1/XrayFA)
+---
+
+## 📸  Screenshot
+
+- Phone
+<p aligin="center">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%" />
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%" />
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%" />
+</p> 
+
+- Pad
+<p aligin="center">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="90%" />
+</p>
 
 ## ✨ Features
 
