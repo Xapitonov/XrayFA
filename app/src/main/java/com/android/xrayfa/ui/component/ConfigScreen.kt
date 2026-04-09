@@ -12,7 +12,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -487,7 +486,7 @@ fun ConfigScreen(
                 colors = SearchBarDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
-                shadowElevation = 1.dp,
+                shadowElevation = 2.dp,
                 modifier = Modifier.size(56.dp),
                 shape = CircleShape
             )

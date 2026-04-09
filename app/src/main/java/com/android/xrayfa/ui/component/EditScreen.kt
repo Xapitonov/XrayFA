@@ -111,6 +111,12 @@ fun EditScreen(
     var fingerprint by remember { mutableStateOf("chrome") }
     var publicKey by remember { mutableStateOf("") }
     var shortId by remember { mutableStateOf("") }
+    
+    // Hysteria2
+    var hysteria2Obfs by remember { mutableStateOf("") }
+    var hysteria2ObfsPassword by remember { mutableStateOf("") }
+    var hysteria2Alpn by remember { mutableStateOf("") }
+    var hysteria2AllowInsecure by remember { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
@@ -135,12 +141,14 @@ fun EditScreen(
                         Text(text = "Edit")
                         LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(2.dp), verticalAlignment = Alignment.CenterVertically) {
                             items(items = options, key = { it }) { label ->
+                                val isFirst = label == options.first()
+                                val isLast = label == options.last()
                                 ToggleButton(
                                     checked = selectedProtocol == label,
                                     onCheckedChange = { selectedProtocol = label },
-                                    shapes = when (label) {
-                                        Protocol.VLESS -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                        Protocol.TROJAN -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                    shapes = when {
+                                        isFirst -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                        isLast -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                                         else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                                     }
                                 ) {
@@ -171,7 +179,11 @@ fun EditScreen(
                                 sni = sni,
                                 fingerprint = fingerprint,
                                 publicKey = publicKey,
-                                shortId = shortId
+                                shortId = shortId,
+                                hysteria2Obfs = hysteria2Obfs,
+                                hysteria2ObfsPassword = hysteria2ObfsPassword,
+                                hysteria2Alpn = hysteria2Alpn,
+                                hysteria2AllowInsecure = hysteria2AllowInsecure
                             )
                             onBack()
                         }, 
@@ -224,39 +236,57 @@ fun EditScreen(
                     EditTextField(id, { id = it }, "Password")
                 }
                 Protocol.HYSTERIA2 -> {
-                    //todo
-                    Text(
-                        text = "Not support yet",
-                        modifier = Modifier.fillMaxWidth(),
-                        fontWeight = FontWeight.Bold
+                    EditTextField(id, { id = it }, "Auth")
+                    EditTextField(sni, { sni = it }, "SNI")
+                    EditTextField(hysteria2Alpn, { hysteria2Alpn = it }, "ALPN")
+                    EditDropdownField(
+                        hysteria2Obfs,
+                        { hysteria2Obfs = it },
+                        "Obfuscation",
+                        listOf("", "salamander")
+                    )
+                    if (hysteria2Obfs.isNotBlank()) {
+                        EditTextField(
+                            hysteria2ObfsPassword,
+                            { hysteria2ObfsPassword = it },
+                            "Obfuscation Password"
+                        )
+                    }
+                    EditDropdownField(
+                        if (hysteria2AllowInsecure) "true" else "false",
+                        { hysteria2AllowInsecure = it == "true" },
+                        "Allow Insecure",
+                        listOf("false", "true")
                     )
                 }
             }
-            
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
-            // 3. Transport Settings
-            Text("Transport Settings", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-            EditDropdownField(network, { network = it }, "Network", listOf("tcp", "ws", "grpc", "h2", "quic"))
-            
-            if (network == "ws") {
-                EditTextField(wsPath, { wsPath = it }, "WS Path")
-                EditTextField(wsHost, { wsHost = it }, "WS Host")
-            } else if (network == "grpc") {
-                EditTextField(grpcServiceName, { grpcServiceName = it }, "gRPC Service Name")
-            }
+            if (selectedProtocol != Protocol.HYSTERIA2) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
-            
-            EditDropdownField(transportSecurity, { transportSecurity = it }, "Security", listOf("none", "tls", "reality"))
-            
-            if (transportSecurity == "tls" || transportSecurity == "reality") {
-                EditTextField(sni, { sni = it }, "SNI (Server Name Indication)")
-                EditDropdownField(fingerprint, { fingerprint = it }, "Fingerprint", listOf("chrome", "firefox", "safari", "edge", "android", "ios", "random", "randomized"))
-                
-                if (transportSecurity == "reality") {
-                    EditTextField(publicKey, { publicKey = it }, "Public Key")
-                    EditTextField(shortId, { shortId = it }, "Short ID")
+                // 3. Transport Settings
+                Text("Transport Settings", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                EditDropdownField(network, { network = it }, "Network", listOf("tcp", "ws", "grpc", "h2", "quic"))
+
+                if (network == "ws") {
+                    EditTextField(wsPath, { wsPath = it }, "WS Path")
+                    EditTextField(wsHost, { wsHost = it }, "WS Host")
+                } else if (network == "grpc") {
+                    EditTextField(grpcServiceName, { grpcServiceName = it }, "gRPC Service Name")
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
+
+                EditDropdownField(transportSecurity, { transportSecurity = it }, "Security", listOf("none", "tls", "reality"))
+
+                if (transportSecurity == "tls" || transportSecurity == "reality") {
+                    EditTextField(sni, { sni = it }, "SNI (Server Name Indication)")
+                    EditDropdownField(fingerprint, { fingerprint = it }, "Fingerprint", listOf("chrome", "firefox", "safari", "edge", "android", "ios", "random", "randomized"))
+
+                    if (transportSecurity == "reality") {
+                        EditTextField(publicKey, { publicKey = it }, "Public Key")
+                        EditTextField(shortId, { shortId = it }, "Short ID")
+                    }
                 }
             }
         }

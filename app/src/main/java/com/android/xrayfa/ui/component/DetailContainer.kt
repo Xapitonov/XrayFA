@@ -131,16 +131,12 @@ fun DetailScreen(
                     )
 
                     Protocol.HYSTERIA2.protocolType ->
-                        Box(
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(innerPadding)
-                        ) {
-                            Text(
-                                text = "Not support yet",
-                                modifier = Modifier.fillMaxWidth(),
-                                fontWeight = FontWeight.Bold
-                            ) //todo
-                        }
+                        HYSTERIA2ConfigScreen(
+                            innerPadding,
+                            content,
+                            detailViewmodel,
+                            scrollBehavior
+                        )
 
                     else -> Text("Unknown protocol")
                 }
@@ -513,6 +509,84 @@ fun SHADOWSOCKSConfigScreen(
                 value = shadowSocks.method,
                 onValueChange = {},
                 label = {Text("method")},
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HYSTERIA2ConfigScreen(
+    innerPadding: PaddingValues,
+    content: String,
+    detailViewmodel: DetailViewmodel,
+    scrollBehavior: TopAppBarScrollBehavior
+) {
+    val hysteria2Config = detailViewmodel.parseHysteria2Protocol(content)
+    LazyColumn(
+        modifier = Modifier.padding(innerPadding)
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) {
+        item {
+            OutlinedTextField(
+                value = hysteria2Config.address,
+                onValueChange = {},
+                label = { Text("server") },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+        }
+        item {
+            SelectField(
+                title = "protocol",
+                field = Protocol.HYSTERIA2.protocolType,
+                fieldList = listOf(
+                    Protocol.VLESS.protocolType,
+                    Protocol.VMESS.protocolType,
+                    Protocol.TROJAN.protocolType,
+                    Protocol.SHADOW_SOCKS.protocolType,
+                    Protocol.HYSTERIA2.protocolType
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+        }
+        item {
+            OutlinedTextField(
+                value = hysteria2Config.port.toString(),
+                onValueChange = {},
+                label = { Text("port") },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+        }
+        item {
+            OutlinedTextField(
+                value = hysteria2Config.auth,
+                onValueChange = {},
+                label = { Text("auth") },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+        }
+        item {
+            OutlinedTextField(
+                value = hysteria2Config.remark ?: "",
+                onValueChange = {},
+                label = { Text("remark") },
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true
+            )
+        }
+        items(items = hysteria2Config.param.toList()) { (key, value) ->
+            OutlinedTextField(
+                value = value,
+                onValueChange = {},
+                label = { Text(key) },
                 modifier = Modifier.fillMaxWidth(),
                 readOnly = true
             )
