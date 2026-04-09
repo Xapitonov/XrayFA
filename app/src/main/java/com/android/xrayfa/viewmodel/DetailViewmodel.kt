@@ -8,6 +8,7 @@ import com.android.xrayfa.dto.VLESSConfig
 import com.android.xrayfa.dto.VMESSConfig
 import com.android.xrayfa.dto.ShadowSocksConfig
 import com.android.xrayfa.dto.TrojanConfig
+import com.android.xrayfa.dto.Hysteria2Config
 import com.android.xrayfa.model.AbsOutboundConfigurationObject
 import com.android.xrayfa.model.OutboundObject
 import com.android.xrayfa.model.protocol.Protocol
@@ -48,6 +49,9 @@ class DetailViewmodel(
     fun parseShadowSocks(content:String): ShadowSocksConfig {
         return parserFactory.shadowSocksConfigParser.decodeProtocol(content)
     }
+    fun parseHysteria2Protocol(content:String): Hysteria2Config {
+        return parserFactory.hysteria2ConfigParser.decodeProtocol(content)
+    }
 
     fun saveNode(
         protocol: Protocol,
@@ -67,7 +71,11 @@ class DetailViewmodel(
         sni: String = "",
         fingerprint: String = "chrome",
         publicKey: String = "",
-        shortId: String = ""
+        shortId: String = "",
+        hysteria2Obfs: String = "",
+        hysteria2ObfsPassword: String = "",
+        hysteria2Alpn: String = "",
+        hysteria2AllowInsecure: Boolean = false
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val url = when (protocol) {
@@ -162,7 +170,31 @@ class DetailViewmodel(
                 }
 
                 Protocol.HYSTERIA2 -> {
-                    "todo"
+                    val params = mutableMapOf<String, String>()
+                    if (sni.isNotBlank()) {
+                        params["sni"] = sni
+                    }
+                    if (hysteria2Alpn.isNotBlank()) {
+                        params["alpn"] = hysteria2Alpn
+                    }
+                    if (hysteria2Obfs.isNotBlank()) {
+                        params["obfs"] = hysteria2Obfs
+                    }
+                    if (hysteria2ObfsPassword.isNotBlank()) {
+                        params["obfs-password"] = hysteria2ObfsPassword
+                    }
+                    if (hysteria2AllowInsecure) {
+                        params["allowInsecure"] = "1"
+                    }
+                    parserFactory.hysteria2ConfigParser.encodeProtocol(
+                        Hysteria2Config(
+                            remark = remarks,
+                            address = address,
+                            port = port,
+                            auth = id,
+                            param = params
+                        )
+                    )
                 }
             }
             
