@@ -25,7 +25,7 @@
 
 ## ✨ Features
 
-* **Multi-Protocol Support**: Full support for VLESS, VMESS, SHADOWSOCKS, and TROJAN.
+* **Multi-Protocol Support**: Full support for VLESS, VMESS, SHADOWSOCKS, TROJAN and HYSTERIA2.
 * **Subscription Management**: Easily manage and update subscription links.
 * **Intuitive Dashboard**: A simple, clean dashboard to view connection status and traffic.
 * **Rich Configuration**: Advanced settings for power users to fine-tune the connection.
