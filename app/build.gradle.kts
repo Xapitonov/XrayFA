@@ -192,8 +192,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     implementation(libs.javax.annotation.api)
-    implementation(libs.haze)
-    implementation(libs.haze.materials)
     implementation(libs.maxmind.geoip2)
     implementation(libs.androidx.datastore.preferences)
 
