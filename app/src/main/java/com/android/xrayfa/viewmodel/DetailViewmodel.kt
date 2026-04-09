@@ -3,6 +3,7 @@ package com.android.xrayfa.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.android.xrayfa.dto.Node
 import com.android.xrayfa.dto.VLESSConfig
 import com.android.xrayfa.dto.VMESSConfig
 import com.android.xrayfa.dto.ShadowSocksConfig
@@ -165,7 +166,7 @@ class DetailViewmodel(
                 }
             }
             
-            val node = com.android.xrayfa.dto.Node(
+            val node = Node(
                 protocolPrefix = protocol.protocolType,
                 address = address,
                 port = port,

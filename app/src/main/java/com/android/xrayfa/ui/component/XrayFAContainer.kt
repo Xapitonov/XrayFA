@@ -75,15 +75,10 @@ import com.android.xrayfa.viewmodel.AppsViewmodel
 import com.android.xrayfa.viewmodel.DetailViewmodel
 import com.android.xrayfa.viewmodel.SettingsViewmodel
 import com.android.xrayfa.viewmodel.SubscriptionViewmodel
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlin.collections.listOf
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun XrayFAContainer(
     xrayViewmodel: XrayViewmodel,
@@ -108,7 +103,6 @@ fun XrayFAContainer(
     )
 
     val top = navBackStack.lastOrNull()
-    val hazeState = remember { HazeState() }
     val showNavigationBar by xrayViewmodel.showNavigationBar.collectAsState()
     val isTopLevel = top in list_navigation
     Box(
@@ -119,7 +113,7 @@ fun XrayFAContainer(
                 backStack = navBackStack,
                 onBack = {navBackStack.routeBack()},
                 sceneStrategies = listOf(rememberXrayFASceneStrategy()),
-                modifier = Modifier.hazeSource(state = hazeState),
+//                modifier = Modifier.hazeSource(state = hazeState),
                 sharedTransitionScope = this,
                 entryProvider = { key ->
                     when(key) {
@@ -237,7 +231,7 @@ fun XrayFAContainer(
                     customNavBarHeightDp = with(density) { heightPx.toDp() }
                 }
         ) {
-            XrayBottomNavOpt(
+            XrayModernFloatingNav(
                 items = list_navigation,
                 currentScreen = navBackStack.last() as NavigateDestination,
                 onItemSelected = { item ->
@@ -247,7 +241,7 @@ fun XrayFAContainer(
                 modifier = Modifier
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
                     .clip(RoundedCornerShape(24.dp))
-                    .hazeEffect(state = hazeState, style = HazeMaterials.ultraThin())
+//                    .hazeEffect(state = hazeState, style = HazeMaterials.ultraThin())
                     .padding(vertical = 3.dp)
             )
         }

@@ -19,6 +19,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -43,6 +44,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -436,5 +439,151 @@ internal fun ItemTab(
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = title)
+    }
+}
+
+/**
+ * A modern, floating navigation bar with high hierarchy and standard Material icons.
+ */
+@SuppressLint("UnusedBoxWithConstraintsScope")
+@Composable
+fun XrayModernFloatingNav(
+    items: List<NavigateDestination>,
+    currentScreen: NavigateDestination,
+    onItemSelected: (NavigateDestination) -> Unit,
+    labelProvider: (NavigateDestination) -> String,
+    modifier: Modifier = Modifier,
+    selectedColor: Color = MaterialTheme.colorScheme.primary,
+    unselectedColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+) {
+    val density = LocalDensity.current
+    val itemCount = items.size
+    val selectedIndex = items.indexOfFirst { it.route == currentScreen.route }.coerceAtLeast(0)
+    val animOffsetX = remember { Animatable(0f) }
+    
+    val configuration = LocalConfiguration.current
+    // Limit max width to 420dp for tablets to maintain the "pill" shape
+    val barWidth = (min(configuration.screenWidthDp, configuration.screenHeightDp) * 0.75)
+        .coerceAtMost(320.0).dp
+
+    LaunchedEffect(selectedIndex) {
+        // Calculate target offset based on item width
+        // This effect will be refined inside BoxWithConstraints below
+    }
+
+    // Outer Box provides room for the shadow to breathe and avoid clipping
+    Box(
+        modifier = modifier
+            .padding(bottom = 4.dp, start = 8.dp, end = 8.dp) // Reduced padding as shadow is smaller
+            .wrapContentWidth()
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(barWidth)
+                .height(64.dp)
+                // Add a subtle border to define hierarchy without heavy shadows
+                .border(
+                    width = 0.5.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(32.dp)
+                ),
+            shape = RoundedCornerShape(32.dp),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f), // Slightly more opaque
+            shadowElevation = 2.dp, // Very subtle shadow
+            tonalElevation = 4.dp   // M3 style tint
+        ) {
+            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                val maxWidthPx = constraints.maxWidth.toFloat()
+                val itemWidthPx = maxWidthPx / itemCount
+                val itemWidthDp = with(density) { itemWidthPx.toDp() }
+
+                // Smooth sliding indicator behind icons
+                LaunchedEffect(selectedIndex) {
+                    animOffsetX.animateTo(
+                        targetValue = selectedIndex * itemWidthPx,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                }
+
+                // The Indicator Capsule
+                Box(
+                    modifier = Modifier
+                        .offset { IntOffset(animOffsetX.value.toInt(), 0) }
+                        .width(itemWidthDp)
+                        .fillMaxHeight()
+                        .padding(6.dp)
+                        .background(
+                            color = selectedColor.copy(alpha = 0.12f),
+                            shape = RoundedCornerShape(28.dp)
+                        )
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    items.forEachIndexed { index, item ->
+                        val selected = index == selectedIndex
+
+                        val iconScale by animateFloatAsState(
+                            targetValue = if (selected) 1.2f else 1f,
+                            animationSpec = tween(300)
+                        )
+
+                        val contentColor by animateColorAsState(
+                            targetValue = if (selected) selectedColor else unselectedColor,
+                            animationSpec = tween(300)
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) { onItemSelected(item) },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = when (item) {
+                                        is Home -> Icons.Default.Language
+                                        is Config -> Icons.Default.Tune
+                                        is Logcat -> Icons.Default.Warning
+                                        else -> Icons.Default.Warning
+                                    },                                    contentDescription = item.route,
+                                    tint = contentColor,
+                                    modifier = Modifier
+                                        .size(26.dp)
+                                        .scale(iconScale)
+                                )
+
+                                androidx.compose.animation.AnimatedVisibility(
+                                    visible = selected,
+                                    enter = fadeIn() + expandVertically(),
+                                    exit = fadeOut() + shrinkVertically()
+                                ) {
+                                    Text(
+                                        text = labelProvider(item),
+                                        color = contentColor,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(top = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
