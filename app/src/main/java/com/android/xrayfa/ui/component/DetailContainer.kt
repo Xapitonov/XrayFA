@@ -48,13 +48,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.android.xrayfa.R
 import com.android.xrayfa.model.protocol.Protocol
-import com.android.xrayfa.ui.navigation.Apps
 import com.android.xrayfa.viewmodel.DetailViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)

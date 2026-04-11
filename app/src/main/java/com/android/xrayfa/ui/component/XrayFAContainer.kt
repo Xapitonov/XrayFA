@@ -113,7 +113,6 @@ fun XrayFAContainer(
                 backStack = navBackStack,
                 onBack = {navBackStack.routeBack()},
                 sceneStrategies = listOf(rememberXrayFASceneStrategy()),
-//                modifier = Modifier.hazeSource(state = hazeState),
                 sharedTransitionScope = this,
                 entryProvider = { key ->
                     when(key) {
