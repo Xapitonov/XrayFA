@@ -39,6 +39,7 @@ jobs:
 
     - name: Install gomobile
       run: |
+        go install golang.org/x/mobile/cmd/gobind@latest
         go install golang.org/x/mobile/cmd/gomobile@latest
         echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
@@ -50,7 +51,14 @@ jobs:
           
         echo "ANDROID_NDK_HOME=$(pwd)/android-ndk-r27" >> $GITHUB_ENV
 
+    - name: Initialize Build Directory
+      run: |
+        sudo mkdir -p /build/build/com.android.xrayfa
+        sudo chown -R $USER:$USER /build
+        cp -a . /build/build/com.android.xrayfa/
+
     - name: Prepare AAR
+      working-directory: /build/build/com.android.xrayfa
       env:
         ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
         GOFLAGS: -buildvcs=false
@@ -60,29 +68,26 @@ jobs:
         cd AndroidLibXrayLite
         gomobile init
         go mod tidy -v
-        
+
         CURRENT_PATH=$(pwd)
         export CGO_CFLAGS="-ffile-prefix-map=$CURRENT_PATH=."
         export CGO_CXXFLAGS="-ffile-prefix-map=$CURRENT_PATH=."
-        
+
         # gomobile bind default name is libv2ray.aar for package libv2ray
         gomobile bind -v -trimpath -androidapi 21 -ldflags="-s -w -buildid=" ./
-        
+
         mkdir -p ../app/libs
         cp libv2ray.aar ../app/libs/
     - name: Grant execute permission for gradlew
+      working-directory: /build/build/com.android.xrayfa
       run: chmod +x gradlew
     - name: Build with Gradle
+      working-directory: /build/build/com.android.xrayfa
       env:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        sudo mkdir -p /build/build/com.android.xrayfa
-        sudo chown -R $USER:$USER /build
-        
-        cp -a . /build/build/com.android.xrayfa/
-        cd /build/build/com.android.xrayfa
         ./gradlew assembleRelease --max-workers=1 --no-daemon
 
     - name: Upload APK
