@@ -295,6 +295,25 @@ fun SettingsScreen(
                         }
                     }
                     SettingsFieldBox(
+                        title = R.string.socks_username_title,
+                        content = settingsState.socksUserName
+                    ) {
+                        editInitValue = settingsState.socksUserName
+                        isShowEditDialog = true
+                        editType = SettingsKeys.SOCKS_USERNAME
+                        validator = {validateSocks(it,context,false)}
+                    }
+                    SettingsFieldBox(
+                        title = R.string.socks_password_title,
+                        content = settingsState.socksPassword
+                    ) {
+                        editInitValue = settingsState.socksPassword
+                        isShowEditDialog = true
+                        editType = SettingsKeys.SOCKS_PASSWORD
+                        validator = {validateSocks(it,context,true)}
+                    }
+
+                    SettingsFieldBox(
                         title = R.string.dns_ipv4,
                         content = settingsState.dnsIPv4
                     ) {
@@ -417,9 +436,15 @@ fun SettingsScreen(
                         validator = validator,
                         onConfirm = {
                             when(editType.name) {
+
                                 SettingsKeys.SOCKS_PORT.name ->
                                     viewmodel.setSocksPort(it.toIntOrNull()?:10808)
 
+                                SettingsKeys.SOCKS_USERNAME.name ->
+                                    viewmodel.setSocksUsername(it)
+
+                                SettingsKeys.SOCKS_PASSWORD.name ->
+                                    viewmodel.setSocksPassword(it)
                                 SettingsKeys.DNS_IPV4.name ->
                                     viewmodel.setDnsIpV4(it)
 
@@ -823,5 +848,33 @@ fun validateIpv6List(input: String, context: Context): String? {
     }
 
     // All valid
+    return null
+}
+
+/**
+ * Validates a single credential field (username or password).
+ * @return Error message string resource ID or null if valid.
+ */
+fun validateSocks(input: String, context: Context, isPassword: Boolean): String? {
+    val trimmed = input.trim()
+    val credentialsRegex = Regex("^[\\x21-\\x7E]+$")
+    // 1. Empty Check
+    if (trimmed.isEmpty()) {
+        return if (isPassword) context.getString(R.string.err_socks_pass_empty)
+        else context.getString(R.string.err_socks_user_empty)
+    }
+
+    // 2. Byte Length Check (RFC 1929 requirement: 1-255 bytes)
+    val byteLength = trimmed.toByteArray(Charsets.UTF_8).size
+    if (byteLength > 255) {
+        return context.getString(R.string.err_socks_length_exceeded)
+    }
+
+    // 3. Character Validity Check
+    // To prevent detection and maintain compatibility, we avoid spaces and control chars.
+    if (!credentialsRegex.matches(trimmed)) {
+        return context.getString(R.string.err_socks_invalid_chars)
+    }
+
     return null
 }

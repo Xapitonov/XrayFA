@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.android.xrayfa.common.utils.SocksConfigGenerator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.first
@@ -23,6 +24,8 @@ data class SettingsState(
     val darkMode: Int = 0,
     val ipV6Enable: Boolean = false,
     val socksPort: Int = 10808,
+    val socksUserName: String = "",
+    val socksPassword: String = "",
     val dnsIPv4: String = "",
     val dnsIPv6: String = "",
     val delayTestUrl: String = DEFAULT_DELAY_TEST_URL,
@@ -38,6 +41,8 @@ object SettingsKeys {
     val DARK_MODE = intPreferencesKey("dark_mode")
     val IPV6_ENABLE = booleanPreferencesKey("ipv6_enable")
     val SOCKS_PORT = intPreferencesKey("socks_port")
+    val SOCKS_USERNAME = stringPreferencesKey("socks_username")
+    val SOCKS_PASSWORD = stringPreferencesKey("socks_password")
     val DNS_IPV4 = stringPreferencesKey("dns_ipv4")
     val DNS_IPV6 = stringPreferencesKey("dns_ipv6")
     val VERSION = stringPreferencesKey("version")
@@ -82,6 +87,8 @@ class SettingsRepository
             darkMode = prefs[SettingsKeys.DARK_MODE] ?: 0,
             ipV6Enable = prefs[SettingsKeys.IPV6_ENABLE] == true,
             socksPort = prefs[SettingsKeys.SOCKS_PORT] ?: 10808,
+            socksUserName = prefs[SettingsKeys.SOCKS_USERNAME]?:"",
+            socksPassword = prefs[SettingsKeys.SOCKS_PASSWORD]?:"",
             dnsIPv4 = prefs[SettingsKeys.DNS_IPV4] ?: "8.8.8.8,1.1.1.1",
             dnsIPv6 = prefs[SettingsKeys.DNS_IPV6] ?: "2001:4860:4860::8888",
             delayTestUrl = prefs[SettingsKeys.DELAY_TEST_URL] ?: DEFAULT_DELAY_TEST_URL,
@@ -175,6 +182,18 @@ class SettingsRepository
     suspend fun setHideFromRecentsState(enable: Boolean) {
         context.dataStore.edit {
             it[SettingsKeys.HIDE_FROM_RECENTS] = enable
+        }
+    }
+
+    suspend fun setSocksUsername(username: String) {
+        context.dataStore.edit {
+            it[SettingsKeys.SOCKS_USERNAME] = username
+        }
+    }
+
+    suspend fun setSocksPassword(password: String) {
+        context.dataStore.edit {
+            it[SettingsKeys.SOCKS_PASSWORD] = password
         }
     }
 

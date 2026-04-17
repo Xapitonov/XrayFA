@@ -2,6 +2,7 @@ package com.android.xrayfa
 
 import android.app.Application
 import android.util.Log
+import androidx.datastore.preferences.core.edit
 import com.android.xrayfa.XrayAppCompatFactory.Companion.TAG
 import com.android.xrayfa.XrayAppCompatFactory.Companion.xrayPATH
 import com.android.xrayfa.common.GEO_IP
@@ -9,6 +10,7 @@ import com.android.xrayfa.common.GEO_SITE
 import com.android.xrayfa.common.repository.Theme
 import com.android.xrayfa.common.repository.SettingsKeys
 import com.android.xrayfa.common.repository.dataStore
+import com.android.xrayfa.common.utils.SocksConfigGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +46,7 @@ class XrayFAApplication: Application() {
         contextAvailableCallback?.onContextAvailable(applicationContext)
         observeDarkMode()
         initXrayFile()
+        initSocksConfig()
     }
 
     private fun initXrayFile() {
@@ -67,6 +70,25 @@ class XrayFAApplication: Application() {
                     FileOutputStream(geositeFile).use { output ->
                         input.copyTo(output)
                     }
+                }
+            }
+        }
+    }
+
+    private fun initSocksConfig() {
+        appCoroutineScope.launch {
+            dataStore.edit {
+                val port = it[SettingsKeys.SOCKS_PORT]
+                if (port == null || port !in SocksConfigGenerator.portRange) {
+                    it[SettingsKeys.SOCKS_PORT] = SocksConfigGenerator.generatePort()
+                }
+                val password = it[SettingsKeys.SOCKS_PASSWORD]
+                if (password == null || password.isBlank()) {
+                    it[SettingsKeys.SOCKS_PASSWORD] = SocksConfigGenerator.generatePassword()
+                }
+                val username = it[SettingsKeys.SOCKS_USERNAME]
+                if (username == null || username.isBlank()) {
+                    it[SettingsKeys.SOCKS_USERNAME] = SocksConfigGenerator.generateUsername()
                 }
             }
         }

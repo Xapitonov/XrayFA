@@ -89,4 +89,10 @@
     <string name="service_start_toast">服务已启动</string>
     <string name="hide_from_recents_title">在最近任务中隐藏</string>
     <string name="hide_from_recents_desc">在最近任务列表中排除此应用 (可能需要重启应用)</string>
+    <string name="socks_username_title">socks 用户名</string>
+    <string name="socks_password_title">socks 密码</string>
+    <string name="err_socks_pass_empty">密码不应该为空</string>
+    <string name="err_socks_user_empty">账号不应该为空</string>
+    <string name="err_socks_length_exceeded">长度不该超过255字节</string>
+    <string name="err_socks_invalid_chars">包含特殊非法字符</string>
 </resources>

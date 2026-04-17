@@ -99,4 +99,11 @@
     <string name="locate_selected_node">Locate selected node</string>
     <string name="hide_from_recents_title">Hide from recent tasks</string>
     <string name="hide_from_recents_desc">Exclude the app from the recent tasks list (may need to restart the app)</string>
+    <string name="socks_username_title">Socks username</string>
+    <string name="socks_password_title">Socks password</string>
+    <string name="err_socks_pass_empty">password should not be empty!</string>
+    <string name="err_socks_user_empty">username should not be empty!</string>
+    <string name="err_socks_length_exceeded">length should not over than 255byte</string>
+    <string name="err_socks_invalid_chars">contains invalid chars</string>
+
 </resources>

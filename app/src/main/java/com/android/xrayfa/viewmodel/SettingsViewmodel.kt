@@ -171,6 +171,20 @@ class SettingsViewmodel(
         }
     }
 
+    fun setSocksUsername(username: String) {
+        viewModelScope.launch {
+            repository.setSocksUsername(username)
+            onConfigSettingsChanged()
+        }
+    }
+
+    fun setSocksPassword(password: String) {
+        viewModelScope.launch {
+            repository.setSocksPassword(password)
+            onConfigSettingsChanged()
+        }
+    }
+
     suspend fun onConfigSettingsChanged() {
         xrayBaseServiceManager.restartXrayBaseServiceIfNeed()
     }
