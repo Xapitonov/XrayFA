@@ -34,9 +34,9 @@ class Tun2SocksConfigUtil
                 appendLine("  address: '${prefs.socksAddress}'")
                 appendLine("  udp: '${if (prefs.udpInTcp) "tcp" else "udp"}'")
 
-                if (prefs.socksUsername.isNotEmpty() && prefs.socksPassword.isNotEmpty()) {
-                    appendLine("  username: '${prefs.socksUsername}'")
-                    appendLine("  password: '${prefs.socksPassword}'")
+                if (settingState.socksUserName.isNotBlank() && settingState.socksPassword.isNotBlank()) {
+                    appendLine("  username: '${settingState.socksUserName}'")
+                    appendLine("  password: '${settingState.socksPassword}'")
                 }
 
                 if (prefs.remoteDns) {

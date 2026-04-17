@@ -47,7 +47,11 @@ abstract class AbstractConfigParser<T: AbsOutboundConfigurationObject,P> {
             port = settingsState.socksPort,
             protocol = "socks",
             settings = SocksInboundConfigurationObject(
-                auth = "noauth",
+                auth = "password",  //password auth instead of "noauth"
+                accounts = listOf(SocksInboundConfigurationObject.AccountObject(
+                    user = settingsState.socksUserName,
+                    pass = settingsState.socksPassword
+                )),
                 udp = true,
                 userLevel = 8
             ),

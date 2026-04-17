@@ -45,10 +45,17 @@ data class VLESSInboundConfigurationObject(
 
 data class SocksInboundConfigurationObject(
     val auth: String? = null,
+    val accounts: List<AccountObject>? = null,
     val userLevel: Int? = null,
     val udp: Boolean? = null,
     val ip: String? = null,
-): AbsInboundConfigurationObject()
+): AbsInboundConfigurationObject() {
+
+    data class AccountObject(
+        val user: String,
+        val pass: String,
+    )
+}
 
 data class TunnelInboundConfigurationObject( //dokodemo-door
     val address: String? = null,
