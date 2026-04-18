@@ -117,13 +117,16 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.foundation.background
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -369,14 +372,10 @@ fun ConfigScreen(
                 }
             }
             if (nodes.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+                EmptyConfigContent(
+                    modifier = Modifier.weight(1f),
                 ) {
-                    Text(
-                        style = MaterialTheme.typography.headlineLarge,
-                        text = stringResource(R.string.no_configuration),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    onNavigate(Edit)
                 }
             }else {
                 LazyColumn(
@@ -523,7 +522,7 @@ fun ConfigScreen(
         AnimatedVisibility(
             visible = !listState.isAtBottom { isAtBottom ->
                 if (isAtBottom) xrayViewmodel.hideNavigationBar() else xrayViewmodel.showNavigationBar()
-            },
+            } && nodes.isNotEmpty(),
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier.align (BiasAlignment(0.8f,0.9f))
@@ -681,5 +680,66 @@ fun Modifier.columnVerticalScrollbar(
             alpha = currentAlpha,
             cornerRadius = CornerRadius(width.toPx() / 2, width.toPx() / 2)
         )
+    }
+}
+
+@Composable
+private fun EmptyConfigContent(
+    modifier: Modifier = Modifier,
+    onAddClick: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // 使用 Material 3 的容器色调
+        Surface(
+            modifier = Modifier.size(120.dp),
+            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Subscriptions,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(30.dp)
+                    .fillMaxSize(),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = stringResource(R.string.no_configuration),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(R.string.no_configuration_hint),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = onAddClick,
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.create_a_config))
+        }
     }
 }
