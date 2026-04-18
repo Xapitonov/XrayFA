@@ -559,7 +559,8 @@ fun XrayModernFloatingNav(
                                         is Config -> Icons.Default.Tune
                                         is Logcat -> Icons.Default.Warning
                                         else -> Icons.Default.Warning
-                                    },                                    contentDescription = item.route,
+                                    },
+                                    contentDescription = item.route,
                                     tint = contentColor,
                                     modifier = Modifier
                                         .size(26.dp)

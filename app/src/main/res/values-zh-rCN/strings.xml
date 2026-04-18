@@ -9,6 +9,8 @@
     <string name="add_config">添加配置</string>
     <string name="clipboard_import">剪切板倒入</string>
     <string name="no_configuration">没有配置信息</string>
+    <string name="no_configuration_hint">通过二维码或者剪切板导入配置来使用</string>
+    <string name="create_a_config">手动创建一个节点</string>
     <string name="select_configuration_notify">先选择配置信息</string>
     <string name="upload_data">上传</string>
     <string name="download_data">下载</string>

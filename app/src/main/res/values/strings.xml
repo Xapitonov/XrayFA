@@ -11,6 +11,8 @@
     <string name="add_config">add config</string>
     <string name="clipboard_import">Clipboard import</string>
     <string name="no_configuration">No configuration file</string>
+    <string name="no_configuration_hint">Import a configuration via clipboard or QR code to get started.</string>
+    <string name="create_a_config">Create First Config</string>
     <string name="select_configuration_notify">select configuration first</string>
     <string name="upload_data">upload</string>
     <string name="download_data">download</string>
