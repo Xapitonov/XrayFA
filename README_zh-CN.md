@@ -1,4 +1,4 @@
-
+<div align="center">
 
 # 🚀 [XrayFA](https://github.com/Q7DF1/XrayFA)
 
